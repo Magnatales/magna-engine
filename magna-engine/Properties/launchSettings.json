@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "magna-engine": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Magnatales Games\\Raylib\\magna-engine\\magna-engine"
+    }
+  }
+}
