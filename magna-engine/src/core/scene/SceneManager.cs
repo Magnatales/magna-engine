@@ -11,13 +11,6 @@ public static class SceneManager
     internal static void FixedUpdate() => ActiveScene?.FixedUpdate();
     
     internal static void Draw() => ActiveScene?.Draw();
-    
-    internal static void SetDefaultScene(Scene? scene)
-    {
-        ActiveScene = scene;
-        ActiveScene?.Init();
-    }
-    
     public static void SetScene(Scene? scene)
     {
         ActiveScene?.Dispose();

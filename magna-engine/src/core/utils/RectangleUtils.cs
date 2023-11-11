@@ -56,4 +56,9 @@ public static class RectangleUtils
     {
         return new Rectangle(center.X - width / 2, center.Y - height / 2, width, height);
     }
+    
+    public static System.Drawing.Rectangle CreateCenteredDrawing(Vector2 center, float width, float height)
+    {
+        return new System.Drawing.Rectangle ((int)(center.X - width / 2f), (int)(center.Y - height / 2f), (int)width, (int)height);
+    }
 }

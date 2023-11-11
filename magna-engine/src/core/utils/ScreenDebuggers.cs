@@ -20,6 +20,6 @@ public static class ScreenDebuggers
         Raylib.DrawRectangleRounded(roundedRect, roundness, segments, new Color(255, 255, 255, 200));
 
         // Draw the FPS text
-        Raylib.DrawTextEx(font, "FPS: " + Raylib.GetFPS(), new Vector2(Raylib.GetScreenWidth() - 100, 10), font.BaseSize, 2, color);
+        Raylib.DrawTextEx(font, "FPS: " + Raylib.GetFPS(), new Vector2(Raylib.GetScreenWidth() - 105, 10), font.BaseSize, 2, color);
     }
 }

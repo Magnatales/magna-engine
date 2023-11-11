@@ -4,11 +4,10 @@ using Core.Tweening;
 using Motion;
 using Raylib_cs;
 
-namespace Entities;
+namespace Actors;
 
 public class Scarfy : Actor
 {
-    public override string Id => "Scarfy";
     private const float SPEED = 300f;
     private float _speedMultiplier = 1;
     private Tweener _tweener;
@@ -18,6 +17,7 @@ public class Scarfy : Actor
 
     public Scarfy(Vector2 worldPosition) : base(worldPosition)
     {
+        Id = "Scarfy";
         _sprite2D = AddComponent(Sprites.Scarfy(this));
         _tweener = new Tweener();
     }

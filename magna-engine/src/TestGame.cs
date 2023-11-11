@@ -17,6 +17,5 @@ public class TestGame : Core.Game
     {
         base.Draw();
         ScreenDebuggers.DrawFps(Fonts.Default, Color.BLACK);
-        //MouseHelper.DrawMousePosition();
     }
 }

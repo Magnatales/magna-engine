@@ -1,7 +1,7 @@
 using System.Numerics;
 using Components;
 using Core;
-using Entities;
+using Actors;
 using Game.UI;
 using Helpers;
 using Log;
@@ -36,7 +36,7 @@ public class TestScene : Scene
         
             var entitySprite = new EmptyActor(new Vector2(randomX, randomY));
             entitySprite.AddComponent(Sprites.ScarfyAuto(entitySprite));
-            AddActor(entitySprite, entitySprite.Id + " " + i);
+            AddActorAndOverrideId(entitySprite, entitySprite.Id + " " + i);
         }
         
         _cells = new Cell[x,y];

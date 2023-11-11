@@ -1,6 +1,6 @@
 using System.Numerics;
 using Core.cam2D;
-using Entities;
+using Actors;
 using Game.UI;
 
 namespace Core;
@@ -8,18 +8,18 @@ namespace Core;
 public abstract class Scene : IDisposable
 {
     public readonly string Name;
-    private readonly Dictionary<string, Actor> _entities;
+    protected Dictionary<string, Actor> _actors;
     private readonly Dictionary<string, Widget> _widgets;
-    private readonly Batching _batching;
+    //private readonly Batching _batching;
     protected readonly Cam2D Cam2D;
 
     protected Scene(string name)
     {
         Name = name;
-        _entities = new Dictionary<string, Actor>();
+        _actors = new Dictionary<string, Actor>();
         _widgets = new();
-        Cam2D = new Cam2D(Vector2.Zero, Cam2D.CameraFollowMode.Normal, 1f);
-        _batching = new Batching();
+        Cam2D = new Cam2D(new Vector2(200, 200), Cam2D.CameraFollowMode.Smooth, 2f);
+       // _batching = new Batching();
     }
 
     public virtual void Init()
@@ -29,38 +29,48 @@ public abstract class Scene : IDisposable
     
     protected internal virtual void Update(float dt)
     {
-        Cam2D?.Update();
-        foreach (var entity in _entities.Values)
-        {
-            if(Cam2D?.IsActorInsideCameraBounds(entity) ?? true)
-                entity.Update(dt);
-        }
-        
-        foreach (var widget in _widgets.Values)
-        {
-            if(widget.IsVisible)
-                widget.Update(dt);
-        }
+        // Cam2D?.Update();
+        // //_actors = _actors.Values.OrderBy(actor => actor.Position.Y).ToDictionary(x => x.Id, x => x);
+        // foreach (var entity in _actors.Values)
+        // {
+        //     if(Cam2D?.IsActorInsideCameraBounds(entity) ?? true)
+        //         entity.Update(dt);
+        // }
+        //
+        // foreach (var widget in _widgets.Values)
+        // {
+        //     if(widget.IsVisible)
+        //         widget.Update(dt);
+        // }
     }
     
     protected internal virtual void AfterUpdate(float dt)
     {
-        foreach (var entity in _entities.Values)
+        foreach (var entity in _actors.Values)
             entity.AfterUpdate(dt);
     }
 
     protected internal virtual void FixedUpdate()
     {
-        foreach (var entity in _entities.Values)
+        foreach (var entity in _actors.Values)
             entity.FixedUpdate();
     }
 
     protected internal virtual void Draw()
     {
-        _batching.RenderBatches(Cam2D);
+        // foreach (var actorsValue in _actors.Values)
+        // {
+        //     if(Cam2D?.IsActorInsideCameraBounds(actorsValue) ?? true)
+        //         actorsValue.Draw();
+        // }
+        // foreach (var widget in _actors.Values)
+        // {
+        //     widget.Draw();
+        // }
+        //_batching.RenderBatches(Cam2D);
     }
     
-    protected internal virtual void DrawWidgets()
+    protected virtual void DrawWidgets()
     {
         foreach (var widget in _widgets.Values)
         {
@@ -68,39 +78,40 @@ public abstract class Scene : IDisposable
                 widget.Draw();
         }
     }
-    
-    public void AddActor(Actor actor)
+
+    protected void AddActor(Actor actor)
     {
-        _entities.Add(actor.Id, actor);
-        _batching.AddToBatch(actor);
+        _actors.Add(actor.Id, actor);
+        //_batching.AddToBatch(actor);
     }
-    
-    public void AddActor(Actor actor, string id)
+
+    protected void AddActorAndOverrideId(Actor actor, string id)
     {
-        _entities.Add(id, actor);
-        _batching.AddToBatch(actor);
+        actor.Id = id;
+        _actors.Add(id, actor);
+        //_batching.AddToBatch(actor);
     }
     
     public void RemoveActor(string id)
     {
-        _entities[id].Dispose();
-        _entities.Remove(id);
-        _batching.RemoveFromBatch(_entities[id]);
+        _actors[id].Dispose();
+        _actors.Remove(id);
+        //_batching.RemoveFromBatch(_entities[id]);
     }
     
     public void RemoveActor(Actor entity)
     {
         RemoveActor(entity.Id);
     }
-    
+
     public Actor GetActor(string id)
     {
-        return _entities[id];
+        return _actors[id];
     }
 
     public Actor[] GetActors()
     {
-        return _entities.Values.ToArray();
+        return _actors.Values.ToArray();
     }
     
     public void AddWidget(Widget widget, bool visible = true)
@@ -121,10 +132,10 @@ public abstract class Scene : IDisposable
         RemoveWidget(widget.Id);
     }
 
-    public void Dispose()
+    public virtual void Dispose()
     {
-        foreach (var disposable in _entities.Values)
+        foreach (var disposable in _actors.Values)
             disposable.Dispose();
-        _entities.Clear();
+        _actors.Clear();
     }
 }

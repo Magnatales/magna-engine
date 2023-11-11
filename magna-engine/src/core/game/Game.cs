@@ -2,7 +2,6 @@ using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using ImGuiNET;
-using ldtk;
 using Log;
 using Raylib_cs;
 using rlImGui_cs;
@@ -16,6 +15,7 @@ public class Game
     private double _timer;
     private readonly GameSettings _settings;
     private Image Logo { get; set; }
+    public static event Action OnChangeAnimation;
 
     protected Game(GameSettings settings)
     {
@@ -28,7 +28,7 @@ public class Game
         Initialize();
         InitializeImGui();
         Logger.Debug("Initialize default scene...");
-        SceneManager.SetDefaultScene(scene);
+        SceneManager.SetScene(scene);
         Logger.Debug("Loop running...");
         while (!Window.ShouldClose())
         {
@@ -37,6 +37,7 @@ public class Game
             AfterUpdate(Time.Delta);
             // for (_timer += Time.Delta; _timer >= _fixedTimeStep; _timer -= _fixedTimeStep)
             //     FixedUpdate();
+            
             Graphics.BeginDrawing();
             Graphics.ClearBackground(_settings.BackgroundColor);
             Draw();
@@ -69,7 +70,7 @@ public class Game
         if (_settings.LogDirectory != string.Empty)
             Logger.CreateLogFile(_settings.LogDirectory);
         var interpolatedStringHandler = new DefaultInterpolatedStringHandler(32, 1);
-        interpolatedStringHandler.AppendLiteral("Hello World! Sparkle [");
+        interpolatedStringHandler.AppendLiteral("Magna Engine [");
         interpolatedStringHandler.AppendFormatted(_version);
         interpolatedStringHandler.AppendLiteral("] start...");
         interpolatedStringHandler.AppendLiteral("Initialize Logger...");
@@ -105,7 +106,7 @@ public class Game
     protected virtual void Load()
     {
         Fonts.Default = Raylib.LoadFontEx("resources/fonts/sourcecode/SourceCodePro-Medium.ttf", 20, null, 0);
-        Fonts.DefaultBold = Raylib.LoadFontEx("resources/fonts/sourcecode/SourceCodePro-Bold.ttf", 50, null, 0);
+        Fonts.DefaultBold = Raylib.LoadFontEx("resources/fonts/sourcecode/SourceCodePro-Bold.ttf", 24, null, 0);
     }
 
     protected virtual void Update(float dt)

@@ -1,7 +1,8 @@
 ﻿using System.Numerics;
 using Components;
 using Core;
-using Entities;
+using Actors;
+using Log;
 using Raylib_cs;
 
 namespace Motion;
@@ -23,19 +24,18 @@ public class Sprite2D : Component
     private readonly FrameInfo _frameInfo;
     private int _currentFrame;
 
-    public Sprite2D(Actor owner, Texture2D texture, Dictionary<string, Animation> allAllAnimations, FrameInfo frameInfo)
+    public Sprite2D(Actor owner, Texture2D texture, Dictionary<string, Animation> animations, FrameInfo frameInfo)
     {
         _owner = owner;
         Texture = texture;
         _frameInfo = frameInfo;
-        _allAnimations = allAllAnimations;
+        _allAnimations = animations;
         
         _currentAnimation = _allAnimations.First().Value;
         _currentFrame = _currentAnimation.StartingFrame;
 
         _sourceRect = new Rectangle(0.0f, 0.0f, (float)Texture.Width / _frameInfo.TotalFrames, Texture.Height);
         _sourceRect.X = _currentFrame * (float)Texture.Width / _frameInfo.TotalFrames;
-        
         _destRec = new Rectangle(0.0f, 0.0f, _sourceRect.Width, _sourceRect.Height);
     }
     
@@ -45,16 +45,32 @@ public class Sprite2D : Component
     }
 
     public Shader? GetShader() => _shader;
+    private float _timer;
 
     public override void Update()
     {
-        var spriteIndex = RaymathF.FloorToInt(Time.FrameCount / _frameInfo.FramesSpeed) % _currentAnimation.Length();
-        if (spriteIndex != _currentFrame)
+        //var spriteIndex = (int)(_frameTimePassed) % _currentAnimation.Length();
+
+        _timer -= Time.Delta * _frameInfo.FramesSpeed;
+        if (_timer <= 0)
         {
-            _currentFrame = spriteIndex;
-            _sourceRect.Width = FlipX ? -Math.Abs(_sourceRect.Width) : Math.Abs(_sourceRect.Width);
+            _timer = 1f;
+            _currentFrame++;
+            if(_currentFrame >= _currentAnimation.Length())
+                _currentFrame = _currentAnimation.StartingFrame;
             _sourceRect.X = _currentFrame * (float)Texture.Width / _frameInfo.TotalFrames;
         }
+        // var spriteIndex = RaymathF.FloorToInt(Time.FrameCount / _frameInfo.FramesSpeed) % _currentAnimation.Length();
+        // //Logger.ScreenLog(spriteIndex.ToString());
+        // if (spriteIndex != _currentFrame)
+        // {
+        //     _currentFrame = spriteIndex;
+        //     _sourceRect.Width = FlipX ? -Math.Abs(_sourceRect.Width) : Math.Abs(_sourceRect.Width);
+        //     _sourceRect.X = _currentFrame * (float)Texture.Width / _frameInfo.TotalFrames;
+        // }
+
+        _sourceRect.Width = FlipX ? -Math.Abs(_sourceRect.Width) : Math.Abs(_sourceRect.Width);
+        //_frameTimePassed += Time.Delta * 100;
         UpdateDestRect();
     }
     

@@ -1,12 +1,5 @@
-// Decompiled with JetBrains decompiler
-// Type: Sparkle.csharp.entity.Cam2D
-// Assembly: Sparkle, Version=2.0.1.0, Culture=neutral, PublicKeyToken=null
-// MVID: 90591F6E-6AA8-49C7-85B5-2B18ABACA428
-// Assembly location: C:\Users\l791\.nuget\packages\sparkle\2.0.1\lib\net7.0\Sparkle.dll
-// XML documentation location: C:\Users\l791\.nuget\packages\sparkle\2.0.1\lib\net7.0\Sparkle.xml
-
 using System.Numerics;
-using Entities;
+using Actors;
 using Raylib_cs;
 
 namespace Core.cam2D;
@@ -22,6 +15,7 @@ public class Cam2D
     public float MinFollowSpeed;
     public float MinFollowEffectLength;
     public float FractionFollowSpeed;
+    private Vector2 previousMousePosition;
     
     public Cam2D(Vector2 position, CameraFollowMode mode, float zoom = 5f)
     {

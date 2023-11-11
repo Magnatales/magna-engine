@@ -22,7 +22,7 @@ public struct GameSettings
         Height = 720;
         IconPath = string.Empty;
         LogDirectory = "logs";
-        TargetFps = 80;
+        TargetFps = 0;
         FixedTimeStep = 60;
         WindowFlags =  ConfigFlags.FLAG_VSYNC_HINT | ConfigFlags.FLAG_WINDOW_RESIZABLE;
         BackgroundColor = Color.SKYBLUE;

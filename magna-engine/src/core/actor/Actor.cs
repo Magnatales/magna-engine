@@ -1,16 +1,19 @@
 ﻿using System.Numerics;
-using System.Timers;
 using Components;
+using Core;
 using Log;
 using Raylib_cs;
 
-namespace Entities;
+namespace Actors;
 
 public abstract class Actor : IDisposable
 {
-    public abstract string Id { get; }
+    public string Id;
     public int Layer = 0;
     private readonly List<Component> _components = new();
+    private const int TOTAL_SLICES = 10;
+    private static int _freeSlice;
+    private readonly int _mySlice;
     
     private Vector2 _position;
     public Vector2 Position
@@ -52,6 +55,8 @@ public abstract class Actor : IDisposable
         Position = worldPosition;
         Scale = Vector2.One;
         Parent = null;
+        _mySlice = _freeSlice;
+        _freeSlice = (_freeSlice + 1) % TOTAL_SLICES;
     }
     
     public void SetParent(Actor parent)
@@ -115,6 +120,18 @@ public abstract class Actor : IDisposable
         _components.Add(component);
         return component;
     }
+    
+    public T GetComponent<T>() where T : Component
+    {
+        foreach (var c in _components)
+        {
+            if (c is T tComponent)
+                return tComponent;
+        }
+
+        Logger.Debug("Component does not exist on entity!");
+        return null;
+    }
 
     public bool TryGetComponent<T>(out T? component) where T : Component
     {
@@ -141,6 +158,8 @@ public abstract class Actor : IDisposable
 
     public virtual void Update(float dt)
     {
+        // if ((Time.FrameCount % TOTAL_SLICES) != _mySlice)
+        //     return;
         for (var index = 0; index < _components.Count; index++)
         {
             var component = _components[index];
@@ -150,24 +169,25 @@ public abstract class Actor : IDisposable
     
     public virtual void AfterUpdate(float deltaTime)
     {
-        for (var index = 0; index < _components.Count; index++)
-        {
-            var component = _components[index];
-            component.Update();
-        }
+        // for (var index = 0; index < _components.Count; index++)
+        // {
+        //     var component = _components[index];
+        //     component.Update();
+        // }
     }
     
     public virtual void FixedUpdate()
     {
-        for (var index = 0; index < _components.Count; index++)
-        {
-            var component = _components[index];
-            component.Update();
-        }
+        // for (var index = 0; index < _components.Count; index++)
+        // {
+        //     var component = _components[index];
+        //     component.Update();
+        // }
     }
 
     public virtual void Draw()
     {
+        
         for (var index = 0; index < _components.Count; index++)
         {
             var component = _components[index];

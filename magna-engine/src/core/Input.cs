@@ -1,11 +1,12 @@
 using Raylib_cs;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Core;
 
   public static class Input
   {
-    /// <inheritdoc cref="M:Raylib_cs.Raylib.IsKeyPressed(Raylib_cs.KeyboardKey)" />
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsKeyPressed(KeyboardKey key) => (bool) Raylib.IsKeyPressed(key);
 
     /// <inheritdoc cref="M:Raylib_cs.Raylib.IsKeyDown(Raylib_cs.KeyboardKey)" />
